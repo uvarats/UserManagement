@@ -19,15 +19,14 @@ security:
             security: false
         main:
             lazy: true
+            user_checker: App\Security\UserChecker
             login_throttling:
                 max_attempts: 3
             provider: app_user_provider
-            form_login:
-                login_path: 'login'
-                check_path: 'login'
-                enable_csrf: true
+
             logout:
                 path: app_logout
+            custom_authenticator: App\Security\LoginFormAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
