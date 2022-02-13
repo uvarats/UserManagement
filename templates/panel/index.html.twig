@@ -3,6 +3,7 @@
 {% block title %}User control{% endblock %}
 
 {% block body %}
+    </style>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -44,91 +45,17 @@
                 <td class="active">
                     <input type="checkbox" class="select-item checkbox" name="select-item" value="{{ user.id }}" />
                 </td>
-                <td class="table-primary">{{ user.id }}</td>
+                <td class="table-primary"><span class="js-user-id">{{ user.id }}</span></td>
                 <td class="table-success">{{ user.username }}</td>
                 <td class="table-warning">{{ user.email }}</td>
                 <td class="table-danger">{{ user.registrationDate|date('Y-m-d H:i:s') }}</td>
                 <td class="table-info">{{ user.lastVisit|date('Y-m-d H:i:s') }}</td>
-                <td class="table-light" name="user_status">{{ user.status|capitalize }}</td>
+                <td class="table-light"><span class="js-user-status">{{ user.status|capitalize }}</span></td>
             </tr>
         {% endfor %}
     </table>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        $(function(){
-            $("#switch").click(function(){
-                    let checked = Array();
-                    $('tr[id="row"]').each(function (index, item) {
-                        if($(item).find('td.active').children('input.select-item').is(":checked")){
-                            checked.push(item);
-                        }
-                    });
-            });
-            $("#delete").click(function(){
-
-                }
-            );
-            //button select all or cancel
-            $("#select-all").click(function () {
-                let all = $("input.select-all")[0];
-                all.checked = !all.checked
-                let checked = all.checked;
-                $("input.select-item").each(function (index,item) {
-                    item.checked = checked;
-                });
-            });
-
-            //button select invert
-            $("#select-invert").click(function () {
-                $("input.select-item").each(function (index,item) {
-                    item.checked = !item.checked;
-                });
-                checkSelected();
-            });
-
-            //button get selected info
-            $("#selected").click(function () {
-                var items=[];
-                $("input.select-item:checked:checked").each(function (index,item) {
-                    items[index] = item.value;
-                });
-                if (items.length < 1) {
-                    alert("no selected items!!!");
-                }else {
-                    var values = items.join(',');
-                    console.log(values);
-                    var html = $("<div></div>");
-                    html.html("selected:"+values);
-                    html.appendTo("body");
-                }
-            });
-
-            //column checkbox select all or cancel
-            $("input.select-all").click(function () {
-                var checked = this.checked;
-                $("input.select-item").each(function (index,item) {
-                    item.checked = checked;
-                });
-            });
-
-            //check selected items
-            $("input.select-item").click(function () {
-                var checked = this.checked;
-                console.log(checked);
-                checkSelected();
-            });
-
-            //check is all selected
-            function checkSelected() {
-                var all = $("input.select-all")[0];
-                var total = $("input.select-item").length;
-                var len = $("input.select-item:checked:checked").length;
-                console.log("total:"+total);
-                console.log("len:"+len);
-                all.checked = len===total;
-            }
-        });
-    </script>
+    <script src="{{ asset('js/PanelActions.js') }}"></script>
 {% endblock %}

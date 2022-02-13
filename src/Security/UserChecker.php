@@ -15,7 +15,10 @@ class UserChecker implements \Symfony\Component\Security\Core\User\UserCheckerIn
      */
     public function checkPreAuth(UserInterface $user)
     {
-        if($user instanceof User && $user->getStatus() === 'LOCKED'){
+        /**
+         * @var User $user
+         */
+        if($user->getStatus() === 'LOCKED'){
             throw new CustomUserMessageAuthenticationException("Your account has been blocked.");
         }
     }

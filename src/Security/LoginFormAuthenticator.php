@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,13 +36,16 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         $username = $request->request->get('username', '');
         $request->getSession()->set(Security::LAST_USERNAME, $username);
-        return new Passport(
+        $passport = new Passport(
             new UserBadge($username),
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
         );
+        AuthService::$passport = $passport;
+        AuthService::$session = $request->getSession();
+        return $passport;
     }
     public function update(ManagerRegistry $managerRegistry){
 

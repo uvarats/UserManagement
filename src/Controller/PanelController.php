@@ -7,8 +7,12 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PanelController extends AbstractController
 {
@@ -35,10 +39,39 @@ class PanelController extends AbstractController
     #[Route('/panel/switch/{id}', name: 'switch_user')]
     public function switchUserStatus(int $id, ManagerRegistry $doctrine){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $this->getUser();
         $user = $doctrine->getRepository(User::class)->find($id);
         $user->setStatus($user->getStatus() === 'AVAILABLE' ? 'LOCKED' : 'AVAILABLE');
+
         $doctrine->getManager()->flush();
-        return new JsonResponse(['username' => $user->getUsername(), 'new_status' => $user->getStatus()]);
+//        if($currentUser->getId() == $id){
+//            return $this->redirectToRoute('app_logout');
+//        }
+        return new JsonResponse(['username' => $user->getUsername(), 'new_status' => ucfirst(strtolower($user->getStatus()))]);
+    }
+    #[Route('panel/delete/{id}', name: 'delete_user')]
+    public function deleteUser(Request $request, int $id, ManagerRegistry $doctrine, TokenStorageInterface $token) :Response{
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $this->getUser();
+
+        $entityManager = $doctrine->getManager();
+        $user = $entityManager->getRepository(User::class)->find($id);
+        $currentUserId = $currentUser->getId();
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        if($currentUserId == $id){
+            $token->setToken(null);
+            //return $this->redirectToRoute('app_logout');
+        }
+        return new Response('OK');
     }
 
 }
