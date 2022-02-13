@@ -10,6 +10,7 @@ $(function(){
                     success: function (response) {
                         $(item).find('.js-user-status').text(response.new_status);
                         location.reload();
+
                     }
 
                 });
