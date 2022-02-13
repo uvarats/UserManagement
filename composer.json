@@ -22,6 +22,7 @@
         "symfony/monolog-bundle": "^3.7",
         "symfony/proxy-manager-bridge": "6.0.*",
         "symfony/rate-limiter": "6.0.*",
+        "symfony/requirements-checker": "^2.0",
         "symfony/runtime": "6.0.*",
         "symfony/security-bundle": "6.0.*",
         "symfony/twig-bundle": "6.0.*",
@@ -64,7 +65,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "requirements-checker": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"

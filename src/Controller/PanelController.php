@@ -36,7 +36,7 @@ class PanelController extends AbstractController
             'users' => $users,
         ]);
     }
-    #[Route('/panel/switch/{id}', name: 'switch_user')]
+    #[Route('/panel/switch/{id}', name: 'switch_user',  methods: 'POST')]
     public function switchUserStatus(int $id, ManagerRegistry $doctrine){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         /**
@@ -52,7 +52,7 @@ class PanelController extends AbstractController
 //        }
         return new JsonResponse(['username' => $user->getUsername(), 'new_status' => ucfirst(strtolower($user->getStatus()))]);
     }
-    #[Route('panel/delete/{id}', name: 'delete_user')]
+    #[Route('panel/delete/{id}', name: 'delete_user', methods: 'POST')]
     public function deleteUser(Request $request, int $id, ManagerRegistry $doctrine, TokenStorageInterface $token) :Response{
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         /**
