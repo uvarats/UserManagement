@@ -67,10 +67,10 @@ class PanelController extends AbstractController
         $entityManager->remove($user);
         $entityManager->flush();
 
-        if($currentUserId == $id){
-            $token->setToken(null);
-            //return $this->redirectToRoute('app_logout');
-        }
+//        if($currentUserId == $id){
+//            $token->setToken(null);
+//            //return $this->redirectToRoute('app_logout');
+//        }
         return new Response('OK');
     }
 
