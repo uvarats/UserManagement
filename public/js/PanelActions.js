@@ -26,12 +26,10 @@ $(function(){
                     url: '/panel/delete/' + id,
                     method: 'POST',
                     success: function (response) {
-                        if(response.is_current === false){
-                            $(item).remove();
-                            location.reload();
-                        } else {
-                            selfDeleteFlag = true;
-                        }
+                        $(item).remove();
+                        location.reload();
+                        selfDeleteFlag = response.is_current
+                        console.log('is_current - ' + selfDeleteFlag);
                     }
                 });
             }
