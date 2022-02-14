@@ -3,20 +3,12 @@ $(function(){
         event.preventDefault();
         let all = $("input.select-item:checked:checked");
         switchAjax(Array.from(all).map(obj => obj.defaultValue).join());
-        //
-        // $('tr[id="row"]').each(function (index, item) {
-        //     if($(item).find('td.active').children('input.select-item').is(":checked")){
-        //         let id = $(item).find('.js-user-id')[0].innerText;
-        //
-        //     }
-        // });
     });
     function switchAjax(ids){
         $.ajax({
             url: '/panel/switch/' + ids,
             method: 'POST',
             success: function (response) {
-                //$(item).find('.js-user-status').text(response.new_status);
                 let responseJsons = Array.from(response).map(JSON.parse);
                 for(let resp of responseJsons){
                     $('input.select-item[value="' + resp.id + '"]').parent().parent().find('.js-user-status').text(resp.new_status);
