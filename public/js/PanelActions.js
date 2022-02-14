@@ -18,31 +18,30 @@ $(function(){
     });
     $("#delete").click(function(event){
         event.preventDefault();
-        let ids = Array();
-        let currentId = 0;
+        let selfDeleteFlag = false;
         $('tr[id="row"]').each(function (index, item) {
             if($(item).find('td.active').children('input.select-item').is(":checked")){
                 let id = $(item).find('.js-user-id')[0].innerText;
                 $.ajax({
-                    url: '/panel/check/' + id,
+                    url: '/panel/delete/' + id,
                     method: 'POST',
                     success: function (response) {
-                        $(item).remove();
-                        location.reload();
+                        if(response.is_current === false){
+                            $(item).remove();
+                            location.reload();
+                        } else {
+                            selfDeleteFlag = true;
+                        }
                     }
                 });
-                ids.push(id);
-
             }
         });
-        $.ajax({
-            url: '/panel/delete/' + id,
-            method: 'POST',
-            success: function (response) {
-                $(item).remove();
-                location.reload();
-            }
-        });
+        if(selfDeleteFlag === true){
+            $.ajax({
+                url: '/panel/self-delete',
+                method: 'POST',
+            });
+        }
         }
     );
     //button select all or cancel
