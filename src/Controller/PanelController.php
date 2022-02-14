@@ -34,7 +34,7 @@ class PanelController extends AbstractController
             'users' => $users,
         ]);
     }
-    #[Route('/panel/check/{id}')]
+    #[Route('/panel/check/{id}', methods: 'POST')]
     public function checkIsCurrent($id){
         /**
          * @var User $current_user
