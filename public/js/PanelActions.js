@@ -10,7 +10,6 @@ $(function(){
                     success: function (response) {
                         $(item).find('.js-user-status').text(response.new_status);
                         location.reload();
-
                     }
 
                 });
@@ -19,9 +18,11 @@ $(function(){
     });
     $("#delete").click(function(event){
         event.preventDefault();
+        let ids = Array();
         $('tr[id="row"]').each(function (index, item) {
             if($(item).find('td.active').children('input.select-item').is(":checked")){
                 let id = $(item).find('.js-user-id')[0].innerText;
+                ids.push(id);
                 $.ajax({
                     url: '/panel/delete/' + id,
                     method: 'POST',

@@ -53,7 +53,7 @@ class PanelController extends AbstractController
         return new JsonResponse(['username' => $user->getUsername(), 'new_status' => ucfirst(strtolower($user->getStatus()))]);
     }
     #[Route('panel/delete/{id}', name: 'delete_user', methods: 'POST')]
-    public function deleteUser(Request $request, int $id, ManagerRegistry $doctrine, TokenStorageInterface $token) :Response{
+    public function deleteUser(Request $request, int $id, ManagerRegistry $doctrine) :Response{
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         /**
          * @var User $currentUser
@@ -72,6 +72,18 @@ class PanelController extends AbstractController
 //            //return $this->redirectToRoute('app_logout');
 //        }
         return new Response('OK');
+    }
+    #[Route('check/{id}', name: 'check_is_current')]
+    public function isCurrentUser($id) : Response{
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /**
+         * @var User $current_user
+         */
+        $current_user = $this->getUser();
+        $flag = $current_user->getId() === $id;
+        return new JsonResponse([
+            'is_current_user' => $flag,
+        ]);
     }
 
 }
