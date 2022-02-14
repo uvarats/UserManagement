@@ -34,7 +34,8 @@ $(function(){
                 });
             }
         });
-        if(selfDeleteFlag === true){
+        if(selfDeleteFlag == true){
+            console.log('deleting');
             $.ajax({
                 url: '/panel/self-delete',
                 method: 'POST',
