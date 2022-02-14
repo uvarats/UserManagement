@@ -1,46 +1,50 @@
 $(function(){
     $("#switch").click(function(event){
         event.preventDefault();
-        $('tr[id="row"]').each(function (index, item) {
-            if($(item).find('td.active').children('input.select-item').is(":checked")){
-                let id = $(item).find('.js-user-id')[0].innerText;
-                $.ajax({
-                    url: '/panel/switch/' + id,
-                    method: 'POST',
-                    success: function (response) {
-                        $(item).find('.js-user-status').text(response.new_status);
-                        location.reload();
-                    }
-
-                });
-            }
-        });
+        let all = $("input.select-item:checked:checked");
+        switchAjax(Array.from(all).map(obj => obj.defaultValue).join());
+        //
+        // $('tr[id="row"]').each(function (index, item) {
+        //     if($(item).find('td.active').children('input.select-item').is(":checked")){
+        //         let id = $(item).find('.js-user-id')[0].innerText;
+        //
+        //     }
+        // });
     });
+    function switchAjax(ids){
+        $.ajax({
+            url: '/panel/switch/' + ids,
+            method: 'POST',
+            success: function (response) {
+                //$(item).find('.js-user-status').text(response.new_status);
+                let responseJsons = Array.from(response).map(JSON.parse);
+                for(let resp of responseJsons){
+                    $('input.select-item[value="' + resp.id + '"]').parent().parent().find('.js-user-status').text(resp.new_status);
+                }
+
+                location.reload();
+            }
+
+        });
+    }
+    function deleteAjax(ids){
+        $.ajax({
+            url: '/panel/delete/' + ids,
+            method: 'POST',
+        })
+    }
     $("#delete").click(function(event){
         event.preventDefault();
-        let selfDeleteFlag = false;
+        let all = $("input.select-item:checked:checked");
+
+        deleteAjax(Array.from(all).map(obj => obj.defaultValue).join());
+
         $('tr[id="row"]').each(function (index, item) {
             if($(item).find('td.active').children('input.select-item').is(":checked")){
-                let id = $(item).find('.js-user-id')[0].innerText;
-                $.ajax({
-                    url: '/panel/delete/' + id,
-                    method: 'POST',
-                    success: function (response) {
-                        $(item).remove();
-                        location.reload();
-                        selfDeleteFlag = response.is_current
-                        console.log('is_current - ' + selfDeleteFlag);
-                    }
-                });
+                $(item).remove();
             }
         });
-        if(selfDeleteFlag == true){
-            console.log('deleting');
-            $.ajax({
-                url: '/panel/self-delete',
-                method: 'POST',
-            });
-        }
+        location.reload();
         }
     );
     //button select all or cancel
