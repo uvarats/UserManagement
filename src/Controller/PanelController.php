@@ -34,30 +34,14 @@ class PanelController extends AbstractController
             'users' => $users,
         ]);
     }
-    #[Route('/panel/check/{id}', methods: 'POST')]
-    public function checkIsCurrent($id){
+    #[Route('/panel/check/{id}')]
+    public function checkIsCurrent(Request $request, $id){
         /**
          * @var User $current_user
          */
         $current_user = $this->getUser();
-        $flag = $current_user != null && $current_user->getId() === $id;
+        $flag = $current_user != null && $current_user->getId() == $id;
         return new JsonResponse(['is_current' => $flag]);
-    }
-    #[Route('/panel/switch/{id}', name: 'switch_user',  methods: 'POST')]
-    public function switchUserStatus(int $id, ManagerRegistry $doctrine){
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        /**
-         * @var User $currentUser
-         */
-        $currentUser = $this->getUser();
-        $user = $doctrine->getRepository(User::class)->find($id);
-        $user->setStatus($user->getStatus() === 'AVAILABLE' ? 'LOCKED' : 'AVAILABLE');
-
-        $doctrine->getManager()->flush();
-//        if($currentUser->getId() == $id){
-//            return $this->redirectToRoute('app_logout');
-//        }
-        return new JsonResponse(['username' => $user->getUsername(), 'new_status' => ucfirst(strtolower($user->getStatus()))]);
     }
     #[Route('panel/delete/{id}', name: 'delete_user', methods: 'POST')]
     public function deleteUser(Request $request, int $id, ManagerRegistry $doctrine) :Response{
@@ -71,14 +55,13 @@ class PanelController extends AbstractController
         $user = $entityManager->getRepository(User::class)->find($id);
         $currentUserId = $currentUser->getId();
 
-        $entityManager->remove($user);
-        $entityManager->flush();
+        if($currentUserId != $id){
+            $entityManager->remove($user);
+            $entityManager->flush();
+            return new JsonResponse(['is_current' => false]);
+        }
 
-//        if($currentUserId == $id){
-//            $token->setToken(null);
-//            //return $this->redirectToRoute('app_logout');
-//        }
-        return new Response('OK');
+        return new JsonResponse(['is_current' => true]);
     }
 
 

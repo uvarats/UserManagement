@@ -19,18 +19,28 @@ $(function(){
     $("#delete").click(function(event){
         event.preventDefault();
         let ids = Array();
+        let currentId = 0;
         $('tr[id="row"]').each(function (index, item) {
             if($(item).find('td.active').children('input.select-item').is(":checked")){
                 let id = $(item).find('.js-user-id')[0].innerText;
-                ids.push(id);
                 $.ajax({
-                    url: '/panel/delete/' + id,
+                    url: '/panel/check/' + id,
                     method: 'POST',
                     success: function (response) {
                         $(item).remove();
                         location.reload();
                     }
                 });
+                ids.push(id);
+
+            }
+        });
+        $.ajax({
+            url: '/panel/delete/' + id,
+            method: 'POST',
+            success: function (response) {
+                $(item).remove();
+                location.reload();
             }
         });
         }
