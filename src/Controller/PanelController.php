@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PanelController extends AbstractController
 {
@@ -35,6 +33,15 @@ class PanelController extends AbstractController
         return $this->render('panel/index.html.twig', [
             'users' => $users,
         ]);
+    }
+    #[Route('/panel/check/{id}')]
+    public function checkIsCurrent($id){
+        /**
+         * @var User $current_user
+         */
+        $current_user = $this->getUser();
+        $flag = $current_user != null && $current_user->getId() === $id;
+        return new JsonResponse(['is_current' => $flag]);
     }
     #[Route('/panel/switch/{id}', name: 'switch_user',  methods: 'POST')]
     public function switchUserStatus(int $id, ManagerRegistry $doctrine){
@@ -73,17 +80,6 @@ class PanelController extends AbstractController
 //        }
         return new Response('OK');
     }
-    #[Route('check/{id}', name: 'check_is_current')]
-    public function isCurrentUser($id) : Response{
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        /**
-         * @var User $current_user
-         */
-        $current_user = $this->getUser();
-        $flag = $current_user->getId() === $id;
-        return new JsonResponse([
-            'is_current_user' => $flag,
-        ]);
-    }
+
 
 }
