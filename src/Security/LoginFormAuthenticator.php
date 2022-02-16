@@ -43,8 +43,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
         );
-        AuthService::$passport = $passport;
-        AuthService::$session = $request->getSession();
         return $passport;
     }
     public function update(ManagerRegistry $managerRegistry){

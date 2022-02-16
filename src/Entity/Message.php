@@ -22,7 +22,7 @@ class Message
     #[ORM\Column(type: 'integer')]
     private $recipientId;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text')]
     private $text;
 
     #[ORM\Column(type: 'datetime')]

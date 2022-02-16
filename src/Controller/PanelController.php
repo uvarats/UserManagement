@@ -19,7 +19,7 @@ class PanelController extends AbstractController
 {
     #[Route('/', name: 'index')]
     public function redirectToIndex(){
-        return $this->redirectToRoute(route: 'panel');
+        return $this->redirectToRoute(route: 'messenger_main');
     }
     #[Route('/panel', name: 'panel')]
     public function index(ManagerRegistry $doctrine): Response
