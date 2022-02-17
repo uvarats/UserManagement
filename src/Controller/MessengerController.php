@@ -27,7 +27,8 @@ class MessengerController extends AbstractController
         foreach ($messages as $message){
             $sender = $entityManager->getRepository(User::class)->find($message->getSenderId());
             $messagesResponse .= "Subject: {$message->getSubject()}<br>
-            From (username): {$sender->getUsername()}<br>Text: {$message->getText()}<br>Sended: {$message->getSendDate()->format('Y-m-d H:i:s')}<br><br>";
+            From (username): {$sender->getUsername()}<br>Text: {$message->getText()}<br>
+            Sended: {$message->getSendDate()->format('Y-m-d H:i:s')}<br><br>";
         }
         return new Response($messagesResponse);
     }
@@ -59,7 +60,9 @@ class MessengerController extends AbstractController
             ->setSenderId(53)
             ->setRecipientId(51)
             ->setText('Вадим даник. Качеля лох.')
-            ->setSendDate(new \DateTime());
+            ->setSendDate(new \DateTime())
+            ->setIsNew(true)
+            ->setIsRead(false);
 
         $bus->dispatch($message);
         $entityManager->persist($message);

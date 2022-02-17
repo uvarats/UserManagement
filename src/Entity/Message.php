@@ -28,6 +28,12 @@ class Message
     #[ORM\Column(type: 'datetime')]
     private $sendDate;
 
+    #[ORM\Column(type: 'boolean')]
+    private $is_new;
+
+    #[ORM\Column(type: 'boolean')]
+    private $is_read;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +95,30 @@ class Message
     public function setSendDate(\DateTimeInterface $sendDate): self
     {
         $this->sendDate = $sendDate;
+
+        return $this;
+    }
+
+    public function getIsNew(): ?bool
+    {
+        return $this->is_new;
+    }
+
+    public function setIsNew(bool $is_new): self
+    {
+        $this->is_new = $is_new;
+
+        return $this;
+    }
+
+    public function getIsRead(): ?bool
+    {
+        return $this->is_read;
+    }
+
+    public function setIsRead(bool $is_read): self
+    {
+        $this->is_read = $is_read;
 
         return $this;
     }
